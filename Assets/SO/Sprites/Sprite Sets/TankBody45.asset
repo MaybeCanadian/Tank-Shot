@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf60c9399e686084884f29a6df92d7fe, type: 3}
+  m_Name: TankBody45
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: 2097163763, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 805008278, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: -662047096, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 1911483891, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 1777238151, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: -2088913076, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: -694672517, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 6624263, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 1742690293, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: -2060403502, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 1660415282, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: -1066458856, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 904766200, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 181978999, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 1025736503, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: -85846112, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 1157688938, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: -1540563750, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 1939084213, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: -1855326340, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: -575757255, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 1496677359, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: -164007164, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 425993953, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 719025968, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 932876031, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: -1551659564, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 185940424, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: -430465384, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 447358286, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: -219582672, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
+  - {fileID: 195999156, guid: ce66047b6f101f64893cd0602e61a051, type: 3}
