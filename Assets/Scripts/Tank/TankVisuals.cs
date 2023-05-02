@@ -22,39 +22,43 @@ public class TankVisuals : MonoBehaviour
     public AngleSet bodySprites;
     public AngleSet turretSprites;
 
+    [Header("Colour")]
+    public Color tankColour;
+    public Color turretColour;
+
     [Header("Renderers")]
     public SpriteRenderer bodyRenderer;
     public SpriteRenderer turretRenderer;
 
     [Header("Offsets")]
     public List<Vector3> cameraTurretOffsets;
-
     private void Start()
     {
-        UpdateGraphics();
+        UpdateVisuals();
     }
+
     private void Update()
     {
         if (constantUpdate)
         {
-            if(cameraAngle != CameraAngleController.GetCameraAngle())
-            {
-                CameraAngleController.SetCameraAngle(cameraAngle);
-            }
-
-            UpdateGraphics();
+            UpdateVisuals();
         }
-
         if (singleUpdate)
         {
-            if (cameraAngle != CameraAngleController.GetCameraAngle())
-            {
-                CameraAngleController.SetCameraAngle(cameraAngle);
-            }
-
             singleUpdate = false;
-            UpdateGraphics();
+            UpdateVisuals();
         }
+    }
+    private void UpdateVisuals()
+    {
+        SetRendererColour();
+
+        if (cameraAngle != CameraAngleController.GetCameraAngle())
+        {
+            CameraAngleController.SetCameraAngle(cameraAngle);
+        }
+
+        UpdateGraphics();
     }
 
     #region Graphics
@@ -115,6 +119,16 @@ public class TankVisuals : MonoBehaviour
         turretRenderer.sprite = turretSprite;
 
         turretRenderer.transform.localPosition = cameraTurretOffsets[cameraAngle];
+    }
+    private void SetRendererColour()
+    {
+        if(bodyRenderer == null || turretRenderer == null)
+        {
+            return;
+        }
+
+        bodyRenderer.color = tankColour;
+        turretRenderer.color = turretColour;
     }
     #endregion
 }
