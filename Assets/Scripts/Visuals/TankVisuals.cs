@@ -35,12 +35,12 @@ public class TankVisuals : MonoBehaviour
     }
     private void Update()
     {
-        if(constantUpdate)
+        if (constantUpdate)
         {
             UpdateGraphics();
         }
 
-        if(singleUpdate)
+        if (singleUpdate)
         {
             singleUpdate = false;
             UpdateGraphics();
@@ -80,7 +80,7 @@ public class TankVisuals : MonoBehaviour
             return;
         }
 
-        if(syncTurret)
+        if (syncTurret)
         {
             turretRotation = bodyRotation;
         }
@@ -96,7 +96,7 @@ public class TankVisuals : MonoBehaviour
         Sprite bodySprite = bodySprites.GetSet(cameraAngle).GetSprite(bodyVal);
         Sprite turretSprite = turretSprites.GetSet(cameraAngle).GetSprite(turretVal);
 
-        if(bodySprite == null || turretSprite == null)
+        if (bodySprite == null || turretSprite == null)
         {
             return;
         }
