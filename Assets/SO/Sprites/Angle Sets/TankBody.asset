@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 226b1b0bdfb47c045ac06b813ea1fa16, type: 3}
   m_Name: TankBody
   m_EditorClassIdentifier: 
-  angles: []
+  angles:
+  - {fileID: 11400000, guid: 50fe3cdf22cc16642a69d7b80e6c4d2b, type: 2}
+  - {fileID: 11400000, guid: 179f86285cc459c4398d94334046aebe, type: 2}
+  - {fileID: 11400000, guid: ce088840bd5427c4f8ea3dea7f9bc0e2, type: 2}
+  - {fileID: 11400000, guid: 407dd0a5f9c8421438d84d013cdf4041, type: 2}

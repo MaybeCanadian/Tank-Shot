@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 226b1b0bdfb47c045ac06b813ea1fa16, type: 3}
   m_Name: TankTurret
   m_EditorClassIdentifier: 
-  angles: []
+  angles:
+  - {fileID: 11400000, guid: ba5b5327cef8bb84980228041f5bebc1, type: 2}
+  - {fileID: 11400000, guid: 8f5ff2f06283c0444b02959782faed76, type: 2}
+  - {fileID: 11400000, guid: ad3ca860a86900a429a41ba7742c8710, type: 2}
+  - {fileID: 11400000, guid: ab61954460541be43a4900ac480de3b2, type: 2}
