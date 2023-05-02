@@ -37,11 +37,21 @@ public class TankVisuals : MonoBehaviour
     {
         if (constantUpdate)
         {
+            if(cameraAngle != CameraAngleController.GetCameraAngle())
+            {
+                CameraAngleController.SetCameraAngle(cameraAngle);
+            }
+
             UpdateGraphics();
         }
 
         if (singleUpdate)
         {
+            if (cameraAngle != CameraAngleController.GetCameraAngle())
+            {
+                CameraAngleController.SetCameraAngle(cameraAngle);
+            }
+
             singleUpdate = false;
             UpdateGraphics();
         }
@@ -93,8 +103,8 @@ public class TankVisuals : MonoBehaviour
 
         int turretVal = Mathf.RoundToInt(turretRot);
 
-        Sprite bodySprite = bodySprites.GetSet(cameraAngle).GetSprite(bodyVal);
-        Sprite turretSprite = turretSprites.GetSet(cameraAngle).GetSprite(turretVal);
+        Sprite bodySprite = bodySprites.GetSet(CameraAngleController.GetCameraAngle()).GetSprite(bodyVal);
+        Sprite turretSprite = turretSprites.GetSet(CameraAngleController.GetCameraAngle()).GetSprite(turretVal);
 
         if (bodySprite == null || turretSprite == null)
         {
@@ -104,7 +114,7 @@ public class TankVisuals : MonoBehaviour
         bodyRenderer.sprite = bodySprite;
         turretRenderer.sprite = turretSprite;
 
-        turretRenderer.transform.position = cameraTurretOffsets[cameraAngle];
+        turretRenderer.transform.localPosition = cameraTurretOffsets[cameraAngle];
     }
     #endregion
 }

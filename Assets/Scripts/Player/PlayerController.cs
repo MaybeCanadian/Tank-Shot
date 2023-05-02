@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,14 +6,12 @@ public class PlayerController : MonoBehaviour
     [Header("Rotation")]
     [SerializeField]
     private float rotation = 0.0f;
+    [SerializeField]
     private float rotationSpeed = 0.0f;
 
-
+    [Header("Movement")]
     [SerializeField]
-    private float rotationAccel = 10.0f;
-    private float rotationFriction = 0.9f;
-
-
+    private float forwardSpeed = 20.0f;
 
     public Vector2 moveInput = Vector2.zero;
 
@@ -43,11 +39,7 @@ public class PlayerController : MonoBehaviour
 
     private void Rotate()
     {
-        rotationSpeed += rotationAccel * Time.fixedDeltaTime * moveInput.x;
-
-        rotation += rotationSpeed * Time.fixedDeltaTime;
-
-        rotationSpeed *= rotationFriction;
+        rotation += rotationSpeed * moveInput.x * Time.fixedDeltaTime;
 
         if (rotation > 360)
         {
@@ -62,6 +54,12 @@ public class PlayerController : MonoBehaviour
     }
     private void Move()
     {
+        Vector3 forward = new Vector3(Mathf.Cos(rotation * Mathf.Deg2Rad), -Mathf.Sin(rotation * Mathf.Deg2Rad), 0.0f);
 
+        //forward += CameraAngleController.GetOffset();
+
+        Vector3 directionalInput = forward.normalized * forwardSpeed * moveInput.y * Time.fixedDeltaTime;
+
+        transform.position += directionalInput;
     }
 }
