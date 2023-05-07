@@ -123,6 +123,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &150195631 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3163967177999990151, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+  m_PrefabInstance: {fileID: 296582414601030032}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35837e8631f48f948904f1537c7178f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,9 +389,101 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 257741126724433634, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 257741126724433634, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_ActionId
+      value: 77d05195-8f54-44b8-9726-74190cf622ba
+      objectReference: {fileID: 0}
+    - target: {fileID: 257741126724433634, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_ActionName
+      value: Player/Boost[/Keyboard/shift]
+      objectReference: {fileID: 0}
+    - target: {fileID: 257741126724433634, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 257741126724433634, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 257741126724433634, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 150195631}
+    - target: {fileID: 257741126724433634, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 257741126724433634, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnBoostInput
+      objectReference: {fileID: 0}
+    - target: {fileID: 257741126724433634, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TankController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 257741126724433634, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 296582414336884713, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
       propertyPath: m_Name
       value: Tank
+      objectReference: {fileID: 0}
+    - target: {fileID: 296582414336884714, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: syncTurret
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 296582414336884714, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: cameraAngle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 296582414336884714, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: bodyRotation
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 296582414336884714, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: tankColour.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 296582414336884714, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: tankColour.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 296582414336884714, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: tankColour.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 296582414336884714, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: tankColour.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 296582414336884714, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: constantUpdate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 296582414336884714, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: turretColour.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 296582414336884714, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: turretColour.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 296582414336884714, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: turretColour.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 296582414336884714, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: turretColour.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 296582414336884714, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: turretRotation
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 296582414336884715, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
       propertyPath: m_RootOrder
@@ -425,6 +528,34 @@ PrefabInstance:
     - target: {fileID: 296582414336884715, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3163967177999990151, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: moveSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3163967177999990151, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: rotationForce
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 3163967177999990151, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: MaxRotateSpeed
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 3163967177999990151, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: boostForceMultiplier
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3163967177999990151, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: maxForwardsMoveSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3163967177999990151, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: maxBackwardsMoveSpeed
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3163967177999990151, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: boostMaxSpeedMultiplier
+      value: 2.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

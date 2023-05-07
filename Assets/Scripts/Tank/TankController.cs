@@ -11,6 +11,7 @@ public class TankController : MonoBehaviour
     public TankVisuals visuals = null;
 
     [Header("Rotation")]
+    [Range(0.0f, 360.0f)]
     public float rotation = 0.0f;
     public float rotationForce = 50.0f;
     public float rotationSpeed = 0.0f;
@@ -38,6 +39,12 @@ public class TankController : MonoBehaviour
     public float boostMeter = 100.0f;
     public float boostUseRate = 10.0f;
 
+    public float boostRegenRate = 10.0f;
+
+    public float boostEndPoint = 0.05f;
+    public float boostMinNeeded = 1.0f;
+    public float boostMaxValue = 100.0f;
+
     public bool boostActive = false;
 
     #region Init Functions
@@ -60,30 +67,34 @@ public class TankController : MonoBehaviour
     #endregion
 
     #region Movement
-    private void FixedUpdate()
+    private void Update()
     {
-        Rotate();
+        float delta = Time.deltaTime;
+
+        Rotate(delta);
 
         if (boostActive)
         {
-            Boost();
+            Boost(delta);
         }
         else
         {
-            Accelerate();
+            Accelerate(delta);
         }
 
-        Move();
+        Move(delta);
+
+        TickBoost(delta);
 
         return;
     }
-    private void Rotate()
+    private void Rotate(float delta)
     {
-        rotationSpeed += moveInput.x * rotationForce * Time.fixedDeltaTime;
+        rotationSpeed += moveInput.x * rotationForce * delta;
 
         rotationSpeed = Mathf.Clamp(rotationSpeed, -MaxRotateSpeed, MaxRotateSpeed);
 
-        rotation += rotationSpeed * Time.fixedDeltaTime;
+        rotation += rotationSpeed * delta;
 
         if (moveInput.x == 0)
         {
@@ -101,30 +112,49 @@ public class TankController : MonoBehaviour
 
         visuals.SetBodyRotation(rotation);
     }
-    private void Accelerate()
+    private void Accelerate(float delta)
     {
         if(moveInput.y > 0)
         {
-            moveSpeed += moveInput.y * forwardsMoveForce * Time.fixedDeltaTime;
+            moveSpeed += moveInput.y * forwardsMoveForce * delta;
         }
         else if(moveInput.y < 0)
         {
-            moveSpeed += moveInput.y * backwardsMoveForce * Time.fixedDeltaTime;
+            moveSpeed += moveInput.y * backwardsMoveForce * delta;
         }
 
         moveSpeed = Mathf.Clamp(moveSpeed, maxBackwardsMoveSpeed, maxForwardsMoveSpeed);
     }
-    private void Boost()
+    private void Boost(float delta)
     {
-        moveSpeed += forwardsMoveForce * boostForceMultiplier * Time.fixedDeltaTime;
+        moveSpeed += forwardsMoveForce * boostForceMultiplier * delta;
 
         moveSpeed = Mathf.Min(moveSpeed, maxForwardsMoveSpeed * boostMaxSpeedMultiplier); 
     }
-    private void Move()
+    private void TickBoost(float delta)
+    {
+        if (boostActive)
+        {
+            boostMeter -= boostUseRate * delta;
+
+            boostMeter = Mathf.Max(boostMeter, 0.0f);
+
+            if (boostMeter <= boostEndPoint)
+            {
+                boostActive = false;
+            }
+            return;
+        }
+
+        boostMeter += boostRegenRate * delta;
+
+        boostMeter = Mathf.Min(boostMeter, boostMaxValue);
+    }
+    private void Move(float delta)
     {
         Vector3 forwards = new Vector3(Mathf.Cos(rotation * Mathf.Deg2Rad), -Mathf.Sin(rotation * Mathf.Deg2Rad), 0.0f).normalized;
 
-        transform.position += forwards * moveSpeed * Time.fixedDeltaTime;
+        transform.position += forwards * moveSpeed * delta;
 
         moveSpeed *= moveSpeedDecay;
     }
@@ -139,7 +169,10 @@ public class TankController : MonoBehaviour
     {
         if (context.started)
         {
-            boostActive = true;
+            if (boostMeter > boostMinNeeded)
+            {
+                boostActive = true;
+            }
 
             return;
         }

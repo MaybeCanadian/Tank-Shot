@@ -6,9 +6,9 @@ using UnityEngine;
 public class TankVisuals : MonoBehaviour
 {
     [Header("Angles")]
-    [Range(0.0f, 360.0f)]
-    public float bodyRotation;
-    [Range(0.0f, 360.0f)]
+    [SerializeField]
+    private float bodyRotation;
+    [SerializeField]
     public float turretRotation;
     [Range(0, 3)]
     public int cameraAngle;
