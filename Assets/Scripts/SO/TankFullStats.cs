@@ -8,4 +8,5 @@ public class TankFullStats : ScriptableObject
     public TankBodyRotationStats rotationStats;
     public TankMovementStats movementStats;
     public TankBoostStats boostStats;
+    public TankShootingStats shootingStats;
 }

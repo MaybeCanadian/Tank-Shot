@@ -21,5 +21,8 @@ public class TankStats : MonoBehaviour
     public bool boostActive = false;
     public float boostMeter = 100.0f;
 
+    [Header("Shooting")]
+    public float shootingAttackTimer = 0.0f;
+
     public TankFullStats defualts;
 }

@@ -18,5 +18,7 @@ public enum TaggedStats_Tags
     TankBoosting_RegenRate,
     TankBoosting_AccelerationMultiplier,
     TankBoosting_MaxSpeedMultiplier,
-    TankBoosting_MeterOveruseAmount
+    TankBoosting_MeterOveruseAmount,
+
+    TankShooting_ShotCooldown
 }
