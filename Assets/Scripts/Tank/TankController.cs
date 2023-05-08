@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public class TankController : MonoBehaviour
 {
+
     private TankStats stats = null;
     private Vector2 moveInput = Vector2.zero;
 
@@ -25,121 +27,156 @@ public class TankController : MonoBehaviour
     {
         float delta = Time.fixedDeltaTime;
 
-        Rotate(delta);
+        RotateBody(delta, ref stats.angularSpeed, ref stats.bodyRotation);
 
         if (stats.boostActive)
         {
-            Boost(delta);
+            Boost(delta, ref stats.moveSpeed);
         }
         else
         {
-            Accelerate(delta);
+            Accelerate(delta, ref stats.moveSpeed);
         }
 
-        Move(delta);
+        Move(delta, stats.moveSpeed);
 
-        TickBoost(delta);
+        TickBoost(delta, ref stats.boostMeter, ref stats.boostActive);
 
-        CheckForDecays();
+        CheckForDecays(ref stats.moveSpeed, ref stats.angularSpeed);
+
+        FixAngles(ref stats.bodyRotation);
 
         return;
     }
 
     #region Movement
-    private void Rotate(float delta)
+    private void RotateBody(float delta, ref float angularSpeed, ref float bodyRotation)
     {
-        stats.rotationSpeed += moveInput.x * stats.rotationForce * delta;
+        float angularAcceleration = stats.defualts.rotationStats.angularAcceleration.value;
+        float maxAngularSpeed = stats.defualts.rotationStats.maxAngularSpeed.value;
 
-        stats.rotationSpeed = Mathf.Clamp(stats.rotationSpeed, -stats.maxRotationSpeed, stats.maxRotationSpeed);
+        angularSpeed += moveInput.x * angularAcceleration * delta;
 
-        stats.bodyRotation += stats.rotationSpeed * delta;
+        angularSpeed = Mathf.Clamp(angularSpeed, -maxAngularSpeed, maxAngularSpeed);
 
-        if (moveInput.x == 0)
+        bodyRotation += angularSpeed * delta;
+    }
+    private void Accelerate(float delta, ref float moveSpeed)
+    {
+        float forwardsAcceleration = stats.defualts.movementStats.forwardsAcceleration.value;
+        float backwardsAcceleration = stats.defualts.movementStats.backwardsAcceleration.value;
+
+        float maxSpeedForwards = stats.defualts.movementStats.maxMoveSpeedForwards.value;
+        float maxSpeedBackwards = stats.defualts.movementStats.maxMoveSpeedBackwards.value;
+
+        if(moveInput.y > 0 && moveSpeed < maxSpeedForwards)
         {
-            stats.rotationSpeed *= stats.rotationSpeedDecay;
+            moveSpeed += forwardsAcceleration * delta;
+        }
+        else if(moveInput.y < 0 && moveSpeed > maxSpeedBackwards)
+        {
+            moveSpeed += moveInput.y * backwardsAcceleration * delta;
+        }
+    }
+    private void Boost(float delta, ref float moveSpeed)
+    {
+        float forwardsAcceleration = stats.defualts.movementStats.forwardsAcceleration.value;
+        float boostAccelerationMultiplier = stats.defualts.boostStats.accelerationMuliplier.value;
 
-            if(Mathf.Abs(stats.rotationSpeed) <= stats.rotationSpeedZeroPoint)
+        float maxForwardsSpeed = stats.defualts.movementStats.maxMoveSpeedForwards.value;
+        float boostMaxSpeedMultiplier = stats.defualts.boostStats.maxSpeedMultiplier.value;
+
+        moveSpeed += forwardsAcceleration * boostAccelerationMultiplier * delta;
+
+        moveSpeed = Mathf.Min(moveSpeed, maxForwardsSpeed * boostMaxSpeedMultiplier); 
+    }
+    private void TickBoost(float delta, ref float boostMeter, ref bool boostActive)
+    {
+        if (boostActive)
+        {
+            float useRate = stats.defualts.boostStats.meterUseRate.value;
+            float cancelPoint = stats.defualts.boostStats.meterCancelPoint;
+
+            boostMeter -= useRate * delta;
+
+            boostMeter = Mathf.Max(boostMeter, 0.0f);
+
+            if (stats.boostMeter <= cancelPoint)
             {
-                stats.rotationSpeed = 0;
-            }
-        }
-
-        if(stats.bodyRotation < 0)
-        {
-            stats.bodyRotation += 360;
-        }
-        else if(stats.bodyRotation > 360)
-        {
-            stats.bodyRotation = stats.bodyRotation % 360;
-        }
-    }
-    private void Accelerate(float delta)
-    {
-        if(moveInput.y > 0 && stats.forwardsMoveSpeed < stats.maxForwardsMoveSpeed)
-        {
-            stats.forwardsMoveSpeed += moveInput.y * stats.moveForceForwards * delta;
-        }
-        else if(moveInput.y < 0 && stats.forwardsMoveSpeed > stats.maxBackwardsMoveSpeed)
-        {
-            stats.forwardsMoveSpeed += moveInput.y * stats.moveForceBackwards * delta;
-        }
-
-        stats.forwardsMoveSpeed = Mathf.Clamp(stats.forwardsMoveSpeed, stats.maxBackwardsMoveSpeed * stats.boostMaxSpeedMultiplier, stats.maxForwardsMoveSpeed * stats.boostMaxSpeedMultiplier);
-    }
-    private void Boost(float delta)
-    {
-        stats.forwardsMoveSpeed += stats.moveForceForwards * stats.boostForceMultiplier * delta;
-
-        stats.forwardsMoveSpeed = Mathf.Min(stats.forwardsMoveSpeed, stats.maxForwardsMoveSpeed * stats.boostMaxSpeedMultiplier); 
-    }
-    private void TickBoost(float delta)
-    {
-        if (stats.boostActive)
-        {
-            stats.boostMeter -= stats.boostMeterUseRate * delta;
-
-            stats.boostMeter = Mathf.Max(stats.boostMeter, 0.0f);
-
-            if (stats.boostMeter <= stats.bosstMeterCancelPoint)
-            {
-                stats.boostActive = false;
+                boostActive = false;
             }
             return;
         }
 
-        stats.boostMeter += stats.boostMeterRegenRate * delta;
 
-        stats.boostMeter = Mathf.Min(stats.boostMeter, stats.boostMeterMaxValue);
+        float regenRate = stats.defualts.boostStats.regenUseRate.value;
+        float maxValue = stats.defualts.boostStats.meterMaxValue.value;
+
+        boostMeter += regenRate * delta;
+
+        boostMeter = Mathf.Min(boostMeter, maxValue);
     }
-    private void Move(float delta)
+    private void Move(float delta, float moveSpeed)
     {
         Vector3 forwards = new Vector3(Mathf.Cos(stats.bodyRotation * Mathf.Deg2Rad), -Mathf.Sin(stats.bodyRotation * Mathf.Deg2Rad), 0.0f).normalized;
 
-        transform.position += forwards * stats.forwardsMoveSpeed * delta;
+        transform.position += forwards * moveSpeed * delta;
     }
-    private void CheckForDecays()
+    private void CheckForDecays(ref float moveSpeed, ref float angularSpeed)
     {
+        float maxForwardsMoveSpeed = stats.defualts.movementStats.maxMoveSpeedForwards.value;
+        float maxBackwardsMoveSpeed = stats.defualts.movementStats.maxMoveSpeedBackwards.value;
+
         if(moveInput.y == 0)
         {
-            ApplyMoveDecay();
+            ApplyMoveDecay(ref moveSpeed);
             return;
         }
-
-        if(!stats.boostActive)
+        else if(!stats.boostActive)
         {
-            if (stats.forwardsMoveSpeed > stats.maxForwardsMoveSpeed || stats.forwardsMoveSpeed < stats.maxBackwardsMoveSpeed)
+            if(moveSpeed > maxForwardsMoveSpeed || moveSpeed < maxBackwardsMoveSpeed)
             {
-                ApplyMoveDecay();
-                return;
+                ApplyMoveDecay(ref moveSpeed);
             }
         }
-    }
-    private void ApplyMoveDecay()
-    {
-        stats.forwardsMoveSpeed *= stats.moveSpeedDecay;
-        if (Mathf.Abs(stats.forwardsMoveSpeed) <= stats.moveSpeedZeroPoint)
+
+        if(moveInput.x == 0)
         {
-            stats.forwardsMoveSpeed = 0.0f;
+            ApplyRotationDecay(ref angularSpeed);
+        }
+    }
+    private void ApplyMoveDecay(ref float moveSpeed)
+    {
+        float moveSpeedDecay = stats.defualts.movementStats.moveSpeedDecay;
+        float moveSpeedZeroPoint = stats.defualts.movementStats.moveSpeedZeroPoint;
+
+        moveSpeed *= moveSpeedDecay;
+        if (Mathf.Abs(moveSpeed) <= moveSpeedZeroPoint)
+        {
+            moveSpeed = 0.0f;
+        }
+    }
+    private void ApplyRotationDecay(ref float angularSpeed)
+    {
+        float angularDecay = stats.defualts.rotationStats.speedDecayRate;
+        float angularSpeedZeroPoint = stats.defualts.rotationStats.speedZeroPoint;
+
+        angularSpeed *= angularDecay;
+
+        if (Mathf.Abs(angularSpeed) <= angularSpeedZeroPoint)
+        {
+            angularSpeed = 0;
+        }
+    }
+    private void FixAngles(ref float bodyRotation)
+    {
+        if (bodyRotation < 0)
+        {
+            bodyRotation += 360;
+        }
+        else if (bodyRotation > 360)
+        {
+            bodyRotation %= 360;
         }
     }
     #endregion
@@ -153,7 +190,9 @@ public class TankController : MonoBehaviour
     {
         if (context.started)
         {
-            if (stats.boostMeter > stats.boostMinRequired)
+            float minBoost = stats.defualts.boostStats.meterMinimumUseValue;
+
+            if (stats.boostMeter > minBoost)
             {
                 stats.boostActive = true;
             }

@@ -37,8 +37,6 @@ public class TankVisuals : MonoBehaviour
     }
     private void Start()
     {
-        SetCameraAngle(stats.cameraAngle);
-
         SetOldValues();
 
         SetOldColors();
@@ -54,7 +52,7 @@ public class TankVisuals : MonoBehaviour
     }
     private void SetOldCamera()
     {
-        oldCameraAngle = stats.cameraAngle;
+        oldCameraAngle = CameraAngleController.GetCameraAngle();
     }
     private void SetOldColors()
     {
@@ -75,13 +73,11 @@ public class TankVisuals : MonoBehaviour
             SetOldValues();
         }
 
-        if (stats.cameraAngle != oldCameraAngle)
+        if(CameraAngleController.GetCameraAngle() != oldCameraAngle)
         {
-            SetCameraAngle(stats.cameraAngle);
+            dirty = true;
 
             SetOldCamera();
-
-            dirty = true;
         }
 
         if(tankColour != oldTankColor || turretColour != oldTurretColor)
@@ -99,14 +95,6 @@ public class TankVisuals : MonoBehaviour
     #endregion
 
     #region Graphics
-    public void SetCameraAngle(int angle)
-    {
-        angle = Mathf.Clamp(angle, 0, 3);
-
-        stats.cameraAngle = angle;
-
-        CameraAngleController.SetCameraAngle(stats.cameraAngle);
-    }
     public void UpdateGraphics()
     {
         if (bodyRenderer == null || turretRenderer == null)
@@ -145,7 +133,7 @@ public class TankVisuals : MonoBehaviour
         bodyRenderer.sprite = bodySprite;
         turretRenderer.sprite = turretSprite;
 
-        turretRenderer.transform.localPosition = cameraTurretOffsets[stats.cameraAngle];
+        turretRenderer.transform.localPosition = cameraTurretOffsets[CameraAngleController.GetCameraAngle()];
     }
     private void UpdateRenderColor()
     {
