@@ -130,7 +130,6 @@ public class TankController : MonoBehaviour
         if(moveInput.y == 0)
         {
             ApplyMoveDecay(ref moveSpeed);
-            return;
         }
         else if(!stats.boostActive)
         {
