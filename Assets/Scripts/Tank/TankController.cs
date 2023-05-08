@@ -40,7 +40,7 @@ public class TankController : MonoBehaviour
 
         TickBoost(delta);
 
-        ApplyMoveDecay();
+        CheckForDecays();
 
         return;
     }
@@ -117,15 +117,29 @@ public class TankController : MonoBehaviour
 
         transform.position += forwards * stats.forwardsMoveSpeed * delta;
     }
+    private void CheckForDecays()
+    {
+        if(moveInput.y == 0)
+        {
+            ApplyMoveDecay();
+            return;
+        }
+
+        if(!stats.boostActive)
+        {
+            if (stats.forwardsMoveSpeed > stats.maxForwardsMoveSpeed || stats.forwardsMoveSpeed < stats.maxBackwardsMoveSpeed)
+            {
+                ApplyMoveDecay();
+                return;
+            }
+        }
+    }
     private void ApplyMoveDecay()
     {
-        if (moveInput.y == 0)
+        stats.forwardsMoveSpeed *= stats.moveSpeedDecay;
+        if (Mathf.Abs(stats.forwardsMoveSpeed) <= stats.moveSpeedZeroPoint)
         {
-            stats.forwardsMoveSpeed *= stats.moveSpeedDecay;
-            if (Mathf.Abs(stats.forwardsMoveSpeed) <= stats.moveSpeedZeroPoint)
-            {
-                stats.forwardsMoveSpeed = 0.0f;
-            }
+            stats.forwardsMoveSpeed = 0.0f;
         }
     }
     #endregion
