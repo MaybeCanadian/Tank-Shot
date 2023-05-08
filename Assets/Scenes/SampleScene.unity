@@ -534,12 +534,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3163967177999990151, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: boostUseRate
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 3163967177999990151, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
       propertyPath: rotationForce
       value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 3163967177999990151, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
       propertyPath: MaxRotateSpeed
       value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 3163967177999990151, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
+      propertyPath: boostRegenRate
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 3163967177999990151, guid: 700565a0885c969479f768c5a4fcb053, type: 3}
       propertyPath: boostForceMultiplier

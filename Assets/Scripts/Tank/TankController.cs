@@ -7,73 +7,27 @@ using UnityEngine.UIElements;
 
 public class TankController : MonoBehaviour
 {
-    [Header("Visuals")]
-    public TankVisuals visuals = null;
-
-    [Header("Rotation")]
-    [Range(0.0f, 360.0f)]
-    public float rotation = 0.0f;
-    public float rotationForce = 50.0f;
-    public float rotationSpeed = 0.0f;
-    public float MaxRotateSpeed = 200.0f;
-    public float rotationDecay = 0.9f;
-
-    [Header("Movement")]
-    public float moveSpeed = 0.0f;
-
-    public float forwardsMoveForce = 10.0f;
-    public float backwardsMoveForce = 5.0f;
-
-    public float maxForwardsMoveSpeed = 1.0f;
-    public float maxBackwardsMoveSpeed = -0.5f;
-
-    public float moveSpeedDecay = 0.9f;
-
-    
+    private TankStats stats = null;
     private Vector2 moveInput = Vector2.zero;
-
-    [Header("Boost")]
-    public float boostMaxSpeedMultiplier = 2.0f;
-    public float boostForceMultiplier = 2.0f;
-
-    public float boostMeter = 100.0f;
-    public float boostUseRate = 10.0f;
-
-    public float boostRegenRate = 10.0f;
-
-    public float boostEndPoint = 0.05f;
-    public float boostMinNeeded = 1.0f;
-    public float boostMaxValue = 100.0f;
-
-    public bool boostActive = false;
 
     #region Init Functions
     private void Awake()
     {
-        visuals = GetComponent<TankVisuals>();
-
-        if(visuals == null)
-        {
-            Debug.LogError("ERROR - Could not locate tank visuals");
-        }
+        stats = GetComponent<TankStats>();
     }
     private void Start()
     {
         moveInput = Vector2.zero;
-
-        moveSpeed = 0.0f;
-        rotationSpeed = 0.0f;
     }
     #endregion
 
-    #region Movement
-    private void Update()
+    private void FixedUpdate()
     {
-        float delta = Time.deltaTime;
+        float delta = Time.fixedDeltaTime;
 
         Rotate(delta);
 
-        if (boostActive)
+        if (stats.boostActive)
         {
             Boost(delta);
         }
@@ -86,77 +40,93 @@ public class TankController : MonoBehaviour
 
         TickBoost(delta);
 
+        ApplyMoveDecay();
+
         return;
     }
+
+    #region Movement
     private void Rotate(float delta)
     {
-        rotationSpeed += moveInput.x * rotationForce * delta;
+        stats.rotationSpeed += moveInput.x * stats.rotationForce * delta;
 
-        rotationSpeed = Mathf.Clamp(rotationSpeed, -MaxRotateSpeed, MaxRotateSpeed);
+        stats.rotationSpeed = Mathf.Clamp(stats.rotationSpeed, -stats.maxRotationSpeed, stats.maxRotationSpeed);
 
-        rotation += rotationSpeed * delta;
+        stats.bodyRotation += stats.rotationSpeed * delta;
 
         if (moveInput.x == 0)
         {
-            rotationSpeed *= rotationDecay;
+            stats.rotationSpeed *= stats.rotationSpeedDecay;
+
+            if(Mathf.Abs(stats.rotationSpeed) <= stats.rotationSpeedZeroPoint)
+            {
+                stats.rotationSpeed = 0;
+            }
         }
 
-        if(rotation < 0)
+        if(stats.bodyRotation < 0)
         {
-            rotation += 360;
+            stats.bodyRotation += 360;
         }
-        else if(rotation > 360)
+        else if(stats.bodyRotation > 360)
         {
-            rotation = rotation % 360;
+            stats.bodyRotation = stats.bodyRotation % 360;
         }
-
-        visuals.SetBodyRotation(rotation);
     }
     private void Accelerate(float delta)
     {
-        if(moveInput.y > 0)
+        if(moveInput.y > 0 && stats.forwardsMoveSpeed < stats.maxForwardsMoveSpeed)
         {
-            moveSpeed += moveInput.y * forwardsMoveForce * delta;
+            stats.forwardsMoveSpeed += moveInput.y * stats.moveForceForwards * delta;
         }
-        else if(moveInput.y < 0)
+        else if(moveInput.y < 0 && stats.forwardsMoveSpeed > stats.maxBackwardsMoveSpeed)
         {
-            moveSpeed += moveInput.y * backwardsMoveForce * delta;
+            stats.forwardsMoveSpeed += moveInput.y * stats.moveForceBackwards * delta;
         }
 
-        moveSpeed = Mathf.Clamp(moveSpeed, maxBackwardsMoveSpeed, maxForwardsMoveSpeed);
+        stats.forwardsMoveSpeed = Mathf.Clamp(stats.forwardsMoveSpeed, stats.maxBackwardsMoveSpeed * stats.boostMaxSpeedMultiplier, stats.maxForwardsMoveSpeed * stats.boostMaxSpeedMultiplier);
     }
     private void Boost(float delta)
     {
-        moveSpeed += forwardsMoveForce * boostForceMultiplier * delta;
+        stats.forwardsMoveSpeed += stats.moveForceForwards * stats.boostForceMultiplier * delta;
 
-        moveSpeed = Mathf.Min(moveSpeed, maxForwardsMoveSpeed * boostMaxSpeedMultiplier); 
+        stats.forwardsMoveSpeed = Mathf.Min(stats.forwardsMoveSpeed, stats.maxForwardsMoveSpeed * stats.boostMaxSpeedMultiplier); 
     }
     private void TickBoost(float delta)
     {
-        if (boostActive)
+        if (stats.boostActive)
         {
-            boostMeter -= boostUseRate * delta;
+            stats.boostMeter -= stats.boostMeterUseRate * delta;
 
-            boostMeter = Mathf.Max(boostMeter, 0.0f);
+            stats.boostMeter = Mathf.Max(stats.boostMeter, 0.0f);
 
-            if (boostMeter <= boostEndPoint)
+            if (stats.boostMeter <= stats.bosstMeterCancelPoint)
             {
-                boostActive = false;
+                stats.boostActive = false;
             }
             return;
         }
 
-        boostMeter += boostRegenRate * delta;
+        stats.boostMeter += stats.boostMeterRegenRate * delta;
 
-        boostMeter = Mathf.Min(boostMeter, boostMaxValue);
+        stats.boostMeter = Mathf.Min(stats.boostMeter, stats.boostMeterMaxValue);
     }
     private void Move(float delta)
     {
-        Vector3 forwards = new Vector3(Mathf.Cos(rotation * Mathf.Deg2Rad), -Mathf.Sin(rotation * Mathf.Deg2Rad), 0.0f).normalized;
+        Vector3 forwards = new Vector3(Mathf.Cos(stats.bodyRotation * Mathf.Deg2Rad), -Mathf.Sin(stats.bodyRotation * Mathf.Deg2Rad), 0.0f).normalized;
 
-        transform.position += forwards * moveSpeed * delta;
-
-        moveSpeed *= moveSpeedDecay;
+        transform.position += forwards * stats.forwardsMoveSpeed * delta;
+    }
+    private void ApplyMoveDecay()
+    {
+        if (moveInput.y == 0)
+        {
+            stats.forwardsMoveSpeed *= stats.moveSpeedDecay;
+            if (Mathf.Abs(stats.forwardsMoveSpeed) <= stats.moveSpeedZeroPoint)
+            {
+                stats.forwardsMoveSpeed = 0.0f;
+            }
+        }
     }
     #endregion
 
@@ -169,9 +139,9 @@ public class TankController : MonoBehaviour
     {
         if (context.started)
         {
-            if (boostMeter > boostMinNeeded)
+            if (stats.boostMeter > stats.boostMinRequired)
             {
-                boostActive = true;
+                stats.boostActive = true;
             }
 
             return;
@@ -179,7 +149,7 @@ public class TankController : MonoBehaviour
 
         if(context.canceled)
         {
-            boostActive = false;
+            stats.boostActive = false;
         }
 
     }

@@ -178,6 +178,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 296582414336884715}
+  - component: {fileID: 6473266903080764325}
   - component: {fileID: 257741126724433634}
   - component: {fileID: 3163967177999990151}
   - component: {fileID: 296582414336884714}
@@ -204,6 +205,41 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6473266903080764325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 296582414336884713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c3bef57a1197774f9951f685a7a12e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bodyRotation: 0
+  rotationForce: 50
+  rotationSpeed: 0
+  MaxRotateSpeed: 200
+  rotationDecay: 0.9
+  turretRotation: 0
+  syncTurret: 1
+  moveSpeed: 0
+  forwardsMoveForce: 10
+  backwardsMoveForce: 5
+  maxForwardsMoveSpeed: 1
+  maxBackwardsMoveSpeed: -0.5
+  moveSpeedDecay: 0.9
+  boostMaxSpeedMultiplier: 2
+  boostForceMultiplier: 2
+  boostMeter: 100
+  boostUseRate: 10
+  boostRegenRate: 10
+  boostEndPoint: 0.05
+  boostMinNeeded: 1
+  boostMaxValue: 100
+  boostActive: 0
+  cameraAngle: 0
 --- !u!114 &257741126724433634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,6 +281,26 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 5fcde6de-0b10-41e8-979e-3728d7fec579
     m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3163967177999990151}
+        m_TargetAssemblyTypeName: TankController, Assembly-CSharp
+        m_MethodName: OnBoostInput
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 77d05195-8f54-44b8-9726-74190cf622ba
+    m_ActionName: Player/Boost[/Keyboard/shift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: bff785c2-e663-401c-8dda-3d3f694ead8a
+    m_ActionName: Player/Fire[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -262,10 +318,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35837e8631f48f948904f1537c7178f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visuals: {fileID: 296582414336884714}
-  rotation: 0
-  rotateSpeed: 50
-  moveSpeed: 1
 --- !u!114 &296582414336884714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,14 +330,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cd41ab9d645ba147817502a84a354da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bodyRotation: 0
-  turretRotation: 0
-  cameraAngle: 0
-  syncTurret: 1
   constantUpdate: 1
   singleUpdate: 0
   bodySprites: {fileID: 11400000, guid: 1422ac06f06460545acf9cd60865078f, type: 2}
   turretSprites: {fileID: 11400000, guid: 8f6e055f09f400a4c85a25ec87a75e1b, type: 2}
+  tankColour: {r: 1, g: 1, b: 1, a: 1}
+  turretColour: {r: 1, g: 1, b: 1, a: 1}
   bodyRenderer: {fileID: 296582413641734117}
   turretRenderer: {fileID: 296582413973901474}
   cameraTurretOffsets:

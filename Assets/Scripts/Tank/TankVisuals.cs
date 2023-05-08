@@ -5,18 +5,11 @@ using UnityEngine;
 
 public class TankVisuals : MonoBehaviour
 {
-    [Header("Angles")]
-    [SerializeField]
-    private float bodyRotation;
-    [SerializeField]
-    public float turretRotation;
-    [Range(0, 3)]
-    public int cameraAngle;
-    public bool syncTurret = true;
+    private TankStats stats = null;
 
-    [Header("Updates")]
-    public bool constantUpdate = false;
-    public bool singleUpdate = false;
+    private float oldBodyRotation;
+    private float oldTurretRotation;
+    private float oldCameraAngle;
 
     [Header("Sprites")]
     public AngleSet bodySprites;
@@ -26,61 +19,93 @@ public class TankVisuals : MonoBehaviour
     public Color tankColour;
     public Color turretColour;
 
+    private Color oldTankColor;
+    private Color oldTurretColor;
+
     [Header("Renderers")]
     public SpriteRenderer bodyRenderer;
     public SpriteRenderer turretRenderer;
 
     [Header("Offsets")]
     public List<Vector3> cameraTurretOffsets;
+
+
+    #region Init Functions
+    private void Awake()
+    {
+        stats = GetComponent<TankStats>();
+    }
     private void Start()
     {
-        UpdateVisuals();
-    }
+        SetCameraAngle(stats.cameraAngle);
 
-    private void Update()
-    {
-        if (constantUpdate)
-        {
-            UpdateVisuals();
-        }
-        if (singleUpdate)
-        {
-            singleUpdate = false;
-            UpdateVisuals();
-        }
-    }
-    private void UpdateVisuals()
-    {
-        SetRendererColour();
+        SetOldValues();
 
-        if (cameraAngle != CameraAngleController.GetCameraAngle())
-        {
-            CameraAngleController.SetCameraAngle(cameraAngle);
-        }
+        SetOldColors();
 
         UpdateGraphics();
+
+        UpdateRenderColor();
     }
+    private void SetOldValues()
+    {
+        oldBodyRotation = stats.bodyRotation;
+        oldTurretRotation = stats.turretRotation;
+    }
+    private void SetOldCamera()
+    {
+        oldCameraAngle = stats.cameraAngle;
+    }
+    private void SetOldColors()
+    {
+        oldTankColor = tankColour;
+        oldTurretColor = turretColour;
+    }
+    #endregion
+
+    #region Updates
+    private void LateUpdate()
+    {
+        bool dirty = false;
+
+        if (stats.bodyRotation != oldBodyRotation || stats.turretRotation != oldTurretRotation)
+        {
+            dirty = true;
+
+            SetOldValues();
+        }
+
+        if (stats.cameraAngle != oldCameraAngle)
+        {
+            SetCameraAngle(stats.cameraAngle);
+
+            SetOldCamera();
+
+            dirty = true;
+        }
+
+        if(tankColour != oldTankColor || turretColour != oldTurretColor)
+        {
+            UpdateRenderColor();
+
+            SetOldColors();
+        }
+
+        if(dirty)
+        {
+            UpdateGraphics();
+        }
+    }
+    #endregion
 
     #region Graphics
-    public void SetBodyRotation(float angle)
-    {
-        bodyRotation = angle;
-
-        UpdateGraphics();
-    }
-    public void SetTurretAngle(float angle)
-    {
-        turretRotation = angle;
-
-        UpdateGraphics();
-    }
     public void SetCameraAngle(int angle)
     {
         angle = Mathf.Clamp(angle, 0, 3);
 
-        cameraAngle = angle;
+        stats.cameraAngle = angle;
 
-        UpdateGraphics();
+        CameraAngleController.SetCameraAngle(stats.cameraAngle);
     }
     public void UpdateGraphics()
     {
@@ -94,16 +119,16 @@ public class TankVisuals : MonoBehaviour
             return;
         }
 
-        if (syncTurret)
+        if (stats.syncBodyAndTurret)
         {
-            turretRotation = bodyRotation;
+            stats.turretRotation = stats.bodyRotation;
         }
 
-        float bodyRot = ((bodyRotation % 360.0f) / 11.5f);
+        float bodyRot = ((stats.bodyRotation % 360.0f) / 11.5f);
 
         int bodyVal = Mathf.RoundToInt(bodyRot);
 
-        float turretRot = ((turretRotation % 360.0f) / 11.5f);
+        float turretRot = ((stats.turretRotation % 360.0f) / 11.5f);
 
         int turretVal = Mathf.RoundToInt(turretRot);
 
@@ -115,12 +140,14 @@ public class TankVisuals : MonoBehaviour
             return;
         }
 
+        //Debug.Log("Sprite is " + bodySprite.name + ", and camera angle is " + CameraAngleController.GetCameraAngle());
+
         bodyRenderer.sprite = bodySprite;
         turretRenderer.sprite = turretSprite;
 
-        turretRenderer.transform.localPosition = cameraTurretOffsets[cameraAngle];
+        turretRenderer.transform.localPosition = cameraTurretOffsets[stats.cameraAngle];
     }
-    private void SetRendererColour()
+    private void UpdateRenderColor()
     {
         if(bodyRenderer == null || turretRenderer == null)
         {
