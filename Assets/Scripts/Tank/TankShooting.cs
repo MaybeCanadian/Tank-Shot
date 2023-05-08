@@ -7,6 +7,8 @@ public class TankShooting : MonoBehaviour
 {
     private TankStats stats = null;
 
+    private bool attackInput = false;
+
     #region Init Functions
     private void Awake()
     {
@@ -18,6 +20,11 @@ public class TankShooting : MonoBehaviour
     private void Update()
     {
         float delta = Time.deltaTime;
+
+        if (attackInput)
+        {
+            CheckAttackCooldown(ref stats.shootingAttackTimer);
+        }
 
         TickAttackTimer(delta, ref stats.shootingAttackTimer);
     }
@@ -47,7 +54,7 @@ public class TankShooting : MonoBehaviour
     }
     private void FireShot()
     {
-
+        Debug.Log("Pew Pew");
     }
     private void SpawnProjectile()
     {
@@ -58,12 +65,17 @@ public class TankShooting : MonoBehaviour
     #region Input Events
     public void ShootInput(InputAction.CallbackContext context)
     {
-        if(!context.started)
+        if(context.started)
         {
+            attackInput = true;
             return;
         }
 
-        CheckAttackCooldown(ref stats.shootingAttackTimer);
+        if(context.canceled)
+        {
+            attackInput = false;
+            return;
+        }
     }
     #endregion
 }
